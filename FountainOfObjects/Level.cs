@@ -2,7 +2,7 @@
     internal class Level {
         private static readonly Random random = new();
         public RoomType[,] LevelGrid { get; private set; }
-        public (int,int) Entrance { get; private set; }
+        public (int,int) StartingLocation { get; private set; }
 
         public Level(LevelSize levelSize) { 
             LevelGrid = LevelGenerator[levelSize];
@@ -27,7 +27,7 @@
                 }
             }
 
-            Entrance = (entranceRow, entranceCol);
+            StartingLocation = (entranceRow, entranceCol);
         }
 
         private (int, int) GetRandomPosition(int rows, int columns) { 
@@ -76,5 +76,4 @@
         Large
     }
 
-    
 }
