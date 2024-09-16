@@ -22,9 +22,11 @@
         /// <param name="color">color from ConsoleColor enum</param>
         public static void PrintColoredText(string prompt, ConsoleColor color)
         {
-            Console.ForegroundColor = color;
-            Console.WriteLine(prompt);
-            Console.ResetColor();
+            if (!string.IsNullOrEmpty(prompt)) {
+                Console.ForegroundColor = color;
+                Console.WriteLine(prompt);
+                Console.ResetColor();
+            }
         }
 
         /// <summary>

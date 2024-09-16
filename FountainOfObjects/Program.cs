@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Utilities;
+﻿using Utilities;
 
 namespace FountainOfObjects {
     internal class Program {
@@ -17,21 +16,25 @@ namespace FountainOfObjects {
                 {"disable fountain", Action.DisableFountain }
             };
 
-
-            PrintMenuAndWait(menuColor);
-            game = GameSizeSelection(menuColor);
-            Console.Clear();
-            while (game.PlayerAlive && !game.PlayerWon) {
-                Utils.PrintColoredText($"You are in the room at Row {game.PlayerLocation.Row}, Column {game.PlayerLocation.Column}", menuColor);
-                game.GetSurroundings();
-                string choice = Utils.GetInput("what do you want to do? ", choiceColor).ToLower();
-                if(ChoiceToAction.TryGetValue(choice, out Action action)){
-                    game.SelectAction(action);
+            while (true) {
+                PrintMenuAndWait(menuColor);
+                game = GameSizeSelection(menuColor);
+                Console.Clear();
+                while (game.PlayerAlive && !game.PlayerWon) {
+                    Utils.PrintColoredText($"You are in the room at Row {game.PlayerLocation.Row}, Column {game.PlayerLocation.Column}", menuColor);
+                    game.GetSurroundings();
+                    string choice = Utils.GetInput("what do you want to do? ", choiceColor).ToLower();
+                    if (ChoiceToAction.TryGetValue(choice, out Action action)) {
+                        game.SelectAction(action);
+                        Console.WriteLine();
+                    }
+                    else {
+                        Console.WriteLine("think again...\n");
+                    }
                 }
-                else {
-                    Console.WriteLine("think again...");
-                }
+                game.PrintResult();
             }
+            
         }
 
 
