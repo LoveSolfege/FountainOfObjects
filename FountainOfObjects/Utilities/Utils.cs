@@ -1,4 +1,5 @@
-﻿namespace Utilities {
+﻿namespace FountainOfObjects.Utilities
+{
     internal static class Utils
     {
         /// <summary>
@@ -7,7 +8,8 @@
         /// <param name="prompt">text to display</param>
         /// <param name="color">color from ConsoleColor enum</param>
         /// <returns></returns>
-        public static string GetInput(string prompt, ConsoleColor color = ConsoleColor.Gray) {
+        public static string GetInput(string prompt, ConsoleColor color = ConsoleColor.Gray)
+        {
             Console.ForegroundColor = color;
             Console.Write(prompt);
             Console.ResetColor();
@@ -22,7 +24,8 @@
         /// <param name="color">color from ConsoleColor enum</param>
         public static void PrintColoredText(string prompt, ConsoleColor color)
         {
-            if (!string.IsNullOrEmpty(prompt)) {
+            if (!string.IsNullOrEmpty(prompt))
+            {
                 Console.ForegroundColor = color;
                 Console.WriteLine(prompt);
                 Console.ResetColor();
@@ -35,7 +38,8 @@
         /// <param name="header">string text to print</param>
         /// <param name="color">color from ConsoleColor enum<</param>
         /// <param name="addLineBreak">line break bool</param>
-        public static void ClearConsolePlaceHeader(string header, ConsoleColor color = ConsoleColor.Gray, bool addLineBreak = false) {
+        public static void ClearConsolePlaceHeader(string header, ConsoleColor color = ConsoleColor.Gray, bool addLineBreak = false)
+        {
             Console.Clear();
             Console.Write("\x1b[3J");
             PrintColoredText(header + (addLineBreak ? "\n" : string.Empty), color);

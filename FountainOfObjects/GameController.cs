@@ -1,32 +1,49 @@
-﻿using System.Data;
-using Utilities;
+﻿using FountainOfObjects.Entities;
+using FountainOfObjects.Utilities;
 
-namespace FountainOfObjects {
+namespace FountainOfObjects
+{
     internal class GameController {
+        private bool FountainEnabled { get; set; } = false;
         private Level gameLevel;
+        private Player player;
         private RoomType[,] cave;
-        public (int Row, int Column) PlayerLocation;
 
-        public bool PlayerAlive { get; private set; } = true;
-        public bool PlayerWon { get; private set; } = false;
-        public bool FountainEnabled { get; private set; } = false;
+        public void Run() {
+            while (true) {
+                Console.Clear();
+                while (player.IsAlive && !player.Won) {
+                    Utils.PrintColoredText($"You are in the room at Row {player.Location.Row}, Column {player.Location.Col}", menuColor);
+                    GetSurroundings();
+                    string choice = Utils.GetInput("what do you want to do? ", choiceColor).ToLower();
+                    if (ChoiceToAction.TryGetValue(choice, out Action action)) {
+                        SelectAction(action);
+                        Console.WriteLine();
+                    }
+                    else {
+                        Console.WriteLine("think again...\n");
+                    }
+                }
+                PrintResult();
+            }
+        }
 
         public GameController(LevelSize levelSize) {
             gameLevel = new Level(levelSize);
             cave = gameLevel.LevelGrid;
-            PlayerLocation = gameLevel.StartingLocation;
+            player = new Player(gameLevel.StartingRow, gameLevel.StartingCol);
         }
 
         public void SelectAction(Action action) {
             if (MovementByActions.TryGetValue(action, out var movement)) {
                 HandleMovement(movement.row, movement.column);
-                Utils.PrintColoredText(EnteringRoomText[GetRoomType(PlayerLocation.Row, PlayerLocation.Column)], ConsoleColor.DarkBlue);
+                Utils.PrintColoredText(EnteringRoomText[GetRoomType(player.Location.Row, player.Location.Col)], ConsoleColor.DarkBlue);
                 CheckPlayerStatus();
             }
-            else if (action == Action.EnableFountain && GetRoomType(PlayerLocation.Row, PlayerLocation.Column) == RoomType.FountainRoom) {
+            else if (action == Action.EnableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = true;
             }
-            else if(action == Action.DisableFountain && GetRoomType(PlayerLocation.Row, PlayerLocation.Column) == RoomType.FountainRoom) {
+            else if(action == Action.DisableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = false;
             }
             else {
@@ -35,7 +52,7 @@ namespace FountainOfObjects {
         }
 
         public void PrintResult() {
-            if (PlayerWon)
+            if (player.Won)
             {
                 Utils.ClearConsolePlaceHeader("Congratulations! You Win!", ConsoleColor.Green);
             }
@@ -46,7 +63,6 @@ namespace FountainOfObjects {
         }
 
         public void GetSurroundings() {
-
             foreach (var (key, (row, col)) in MovementByActions) {
                 int newRow = PlayerLocation.Row + row;
                 int newCol = PlayerLocation.Column + col;
@@ -62,22 +78,22 @@ namespace FountainOfObjects {
         }
 
         private void CheckForWin() {
-            if(PlayerAlive && PlayerLocation == gameLevel.StartingLocation && FountainEnabled) {
-                PlayerWon = true;
+            if(player.IsAlive && player.Location == gameLevel.StartingLocation && FountainEnabled) {
+                player.Won = true;
             }
         }
 
         private void CheckForDeath() {
-            if(GetRoomType(PlayerLocation.Row, PlayerLocation.Column) == RoomType.Pit) {
-                PlayerAlive = false;
+            if(GetRoomType(player.Location.Row, player.Location.Col) == RoomType.Pit) {
+                player.IsAlive = false;
             }
         }
 
         private void HandleMovement(int rowDirection, int columnDirection) {
-            int row = PlayerLocation.Row + rowDirection;
-            int column = PlayerLocation.Column + columnDirection;
+            int row = player.Location.Row + rowDirection;
+            int column = player.Location.Col + columnDirection;
             if (IsValidRoom(row, column)) {
-                PlayerLocation = (row, column);
+                player.UpdatePosition(row, column);
             }
             else {
                 Utils.PrintColoredText("You've hit the wall", ConsoleColor.DarkYellow);
@@ -113,6 +129,16 @@ namespace FountainOfObjects {
             { Action.MoveLeft, (0, -1) },
             { Action.MoveRight, (0, 1) },
         };
+
+        private Dictionary<String, Action> ChoiceToAction = new Dictionary<String, Action>() {
+            {"move up", Action.MoveUp },
+            {"move down", Action.MoveDown },
+            {"move left", Action.MoveLeft },
+            {"move right", Action.MoveRight },
+            {"enable fountain", Action.EnableFountain },
+            {"disable fountain", Action.DisableFountain }
+        };
+
     }
 
     public enum Action {

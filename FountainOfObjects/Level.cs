@@ -2,7 +2,9 @@
     internal class Level {
         private static readonly Random random = new();
         public RoomType[,] LevelGrid { get; private set; }
-        public (int,int) StartingLocation { get; private set; }
+        public int StartingRow { get; private set; }
+        public int StartingCol { get; private set; }
+        public (int Row , int Col) StartingLocation { get { return (StartingRow, StartingCol); } }
 
         public Level(LevelSize levelSize) { 
             LevelGrid = LevelGenerator[levelSize];
@@ -13,10 +15,10 @@
             int rows = LevelGrid.GetLength(0);
             int columns = LevelGrid.GetLength(1);
 
-            (int entranceRow, int entranceCol) = GetRandomPosition(rows, columns);
-            (int fountainRow, int fountainCol) = GetRandomUniquePosition(rows, columns, entranceRow, entranceCol);
+            (StartingRow, StartingCol) = GetRandomPosition(rows, columns);
+            (int fountainRow, int fountainCol) = GetRandomUniquePosition(rows, columns, StartingRow, StartingCol);
 
-            LevelGrid[entranceRow, entranceCol] = RoomType.Entrance;
+            LevelGrid[StartingRow, StartingCol] = RoomType.Entrance;
             LevelGrid[fountainRow, fountainCol] = RoomType.FountainRoom;
 
             for (int r = 0; r < rows; r++){
@@ -26,8 +28,6 @@
                     }
                 }
             }
-
-            StartingLocation = (entranceRow, entranceCol);
         }
 
         private (int, int) GetRandomPosition(int rows, int columns) { 
