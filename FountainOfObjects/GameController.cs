@@ -1,5 +1,6 @@
 ﻿using FountainOfObjects.Entities;
 using FountainOfObjects.Utilities;
+using FountainOfObjects.Settings;
 
 namespace FountainOfObjects
 {
@@ -13,9 +14,9 @@ namespace FountainOfObjects
             while (true) {
                 Console.Clear();
                 while (player.IsAlive && !player.Won) {
-                    Utils.PrintColoredText($"You are in the room at Row {player.Location.Row}, Column {player.Location.Col}", menuColor);
+                    Utils.PrintColoredText($"You are in the room at Row {player.Location.Row}, Column {player.Location.Col}", ColorSettings.MenuColor);
                     GetSurroundings();
-                    string choice = Utils.GetInput("what do you want to do? ", choiceColor).ToLower();
+                    string choice = Utils.GetInput("what do you want to do? ", ColorSettings.ChoiceColor).ToLower();
                     if (ChoiceToAction.TryGetValue(choice, out Action action)) {
                         SelectAction(action);
                         Console.WriteLine();

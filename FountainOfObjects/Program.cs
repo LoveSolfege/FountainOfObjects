@@ -1,25 +1,26 @@
-﻿using FountainOfObjects.Utilities;
+﻿using FountainOfObjects.Settings;
+using FountainOfObjects.Utilities;
 
 namespace FountainOfObjects
 {
     internal class Program {
         static void Main(string[] args) {
+            ColorSettings.LoadColors();
             GameController game;
 
-            PrintMenuAndWait(menuColor);
-            game = GameSizeSelection(menuColor);
+            PrintMenuAndWait(ColorSettings.MenuColor);
+            game = GameSizeSelection(ColorSettings.MenuColor);
             game.Run();
             
             
         }
-
 
         static GameController GameSizeSelection(ConsoleColor color = ConsoleColor.Gray) {
             Utils.ClearConsolePlaceHeader("In order to start the game, please select cave size", color);
             Utils.PrintColoredText("[1] Small (4x4), [2] Medium (6x6), [3] Large (8x8)", color);
             
             while (true) {
-                string choice = Utils.GetInput("Cave size: ", choiceColor);
+                string choice = Utils.GetInput("Cave size: ", ColorSettings.ChoiceColor);
                 switch (choice) {
                     case "1":
                         return new GameController(LevelSize.Small);
