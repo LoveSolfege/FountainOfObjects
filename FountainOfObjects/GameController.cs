@@ -16,7 +16,7 @@ namespace FountainOfObjects
                 while (player.IsAlive && !player.Won) {
                     Utils.PrintColoredText($"You are in the room at Row {player.Location.Row}, Column {player.Location.Col}", ColorSettings.MenuColor);
                     GetSurroundings();
-                    string choice = Utils.GetInput("what do you want to do? ", ColorSettings.ChoiceColor).ToLower();
+                    string choice = Utils.GetInput("What do you want to do? ", ColorSettings.ChoiceColor).ToLower();
                     if (ChoiceToAction.TryGetValue(choice, out Action action)) {
                         SelectAction(action);
                         Console.WriteLine();
@@ -38,7 +38,7 @@ namespace FountainOfObjects
         public void SelectAction(Action action) {
             if (MovementByActions.TryGetValue(action, out var movement)) {
                 HandleMovement(movement.row, movement.column);
-                Utils.PrintColoredText(EnteringRoomText[GetRoomType(player.Location.Row, player.Location.Col)], ConsoleColor.DarkBlue);
+                Utils.PrintColoredText(EnteringRoomText[GetRoomType(player.Location.Row, player.Location.Col)], ColorSettings.SenseColor);
                 CheckPlayerStatus();
             }
             else if (action == Action.EnableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
@@ -65,10 +65,10 @@ namespace FountainOfObjects
 
         public void GetSurroundings() {
             foreach (var (key, (row, col)) in MovementByActions) {
-                int newRow = PlayerLocation.Row + row;
-                int newCol = PlayerLocation.Column + col;
+                int newRow = player.Location.Row + row;
+                int newCol = player.Location.Col + col;
                 if(IsValidRoom(newRow, newCol)){
-                    Utils.PrintColoredText(SensingRoomText[GetRoomType(newRow, newCol)], ConsoleColor.DarkBlue);
+                    Utils.PrintColoredText(SensingRoomText[GetRoomType(newRow, newCol)], ColorSettings.SenseColor);
                 }
             }
         }

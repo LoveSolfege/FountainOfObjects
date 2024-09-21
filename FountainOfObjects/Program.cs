@@ -5,9 +5,8 @@ namespace FountainOfObjects
 {
     internal class Program {
         static void Main(string[] args) {
-            ColorSettings.LoadColors();
+            ColorSettings.LoadColors(ConfigurationManager.Configuration);
             GameController game;
-
             PrintMenuAndWait(ColorSettings.MenuColor);
             game = GameSizeSelection(ColorSettings.MenuColor);
             game.Run();
