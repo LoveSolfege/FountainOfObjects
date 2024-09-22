@@ -1,14 +1,28 @@
-﻿namespace FountainOfObjects {
+﻿using FountainOfObjects.Settings;
+using System.Diagnostics;
+
+namespace FountainOfObjects {
     internal class Level {
         private static readonly Random random = new();
+        public int WorldSize { get; private set; }
+        public int PitCount { get; private set; }
+        public int MaelstromCount { get; private set; }
+        public int AmarokCount { get; private set; }
+
+
         public RoomType[,] LevelGrid { get; private set; }
         public int StartingRow { get; private set; }
         public int StartingCol { get; private set; }
         public (int Row , int Col) StartingLocation { get { return (StartingRow, StartingCol); } }
 
-        public Level(LevelSize levelSize) { 
-            LevelGrid = LevelGenerator[levelSize];
+        
+
+        public Level(Difficulty diff) { 
+            SetDifficulty(diff);
+            LevelGrid = new RoomType[WorldSize, WorldSize];
             FillGrid();
+
+            Debug.WriteLine($"world size {WorldSize} Pit Count {PitCount} MaelstromCount { MaelstromCount} Amarok Count {AmarokCount}");
         }
             
         private void FillGrid() {
@@ -29,6 +43,22 @@
                 }
             }
         }
+
+        private void SetDifficulty(Difficulty diff) {
+            string gameSize = DifficultyToString[diff];
+
+            WorldSize = DifficultySettings.GetCount(ConfigurationManager.Configuration, nameof(WorldSize), gameSize);
+            PitCount = DifficultySettings.GetCount(ConfigurationManager.Configuration, nameof(PitCount), gameSize);
+            MaelstromCount = DifficultySettings.GetCount(ConfigurationManager.Configuration, nameof(MaelstromCount), gameSize);
+            AmarokCount = DifficultySettings.GetCount(ConfigurationManager.Configuration, nameof(AmarokCount), gameSize);
+        }
+
+        private Dictionary<Difficulty, String> DifficultyToString = new() {
+            { Difficulty.Easy, "SmallWorld"},
+            { Difficulty.Medium, "MediumWorld" },
+            { Difficulty.Hard, "LargeWorld" }
+        };
+
 
         private (int, int) GetRandomPosition(int rows, int columns) { 
             int row = random.Next(0, rows);
@@ -54,13 +84,6 @@
                 return RoomType.Pit;
         }
 
-
-        private Dictionary<LevelSize, RoomType[,]> LevelGenerator = new Dictionary<LevelSize, RoomType[,]>() {
-            { LevelSize.Small, new RoomType[4,4] },
-            { LevelSize.Medium, new RoomType[6,6] },
-            { LevelSize.Large, new RoomType[8,8] }
-        };
-
     }
 
     public enum RoomType {
@@ -70,10 +93,10 @@
         Pit
     }
 
-    public enum LevelSize {
-        Small,
+    public enum Difficulty {
+        Easy,
         Medium,
-        Large
+        Hard
     }
 
 }

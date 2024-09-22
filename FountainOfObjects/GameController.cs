@@ -11,29 +11,28 @@ namespace FountainOfObjects
         private RoomType[,] cave;
 
         public void Run() {
-            while (true) {
-                Console.Clear();
-                while (player.IsAlive && !player.Won) {
-                    Utils.PrintColoredText($"You are in the room at Row {player.Location.Row}, Column {player.Location.Col}", ColorSettings.MenuColor);
-                    GetSurroundings();
-                    string choice = Utils.GetInput("What do you want to do? ", ColorSettings.ChoiceColor).ToLower();
-                    if (ChoiceToAction.TryGetValue(choice, out Action action)) {
-                        SelectAction(action);
-                        Console.WriteLine();
-                    }
-                    else {
-                        Console.WriteLine("think again...\n");
-                    }
+            Console.Clear();
+            while (player.IsAlive && !player.Won) {
+                Utils.PrintColoredText(player.ToString(), ColorSettings.MenuColor);
+                GetSurroundings();
+                string choice = Utils.GetInput("What do you want to do? ", ColorSettings.ChoiceColor).ToLower();
+                if (ChoiceToAction.TryGetValue(choice, out Action action)) {
+                    SelectAction(action);
+                    Console.WriteLine();
                 }
-                PrintResult();
+                else {
+                    Utils.PrintColoredText("Choice is unsuppported, command help to get help", ColorSettings.WarningColor);
+                }
             }
+            PrintResult();
         }
 
-        public GameController(LevelSize levelSize) {
-            gameLevel = new Level(levelSize);
+        public GameController(Difficulty diff) {
+            gameLevel = new Level(diff);
             cave = gameLevel.LevelGrid;
             player = new Player(gameLevel.StartingRow, gameLevel.StartingCol);
         }
+
 
         public void SelectAction(Action action) {
             if (MovementByActions.TryGetValue(action, out var movement)) {
@@ -46,9 +45,6 @@ namespace FountainOfObjects
             }
             else if(action == Action.DisableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = false;
-            }
-            else {
-                throw new NotImplementedException();
             }
         }
 
@@ -91,10 +87,11 @@ namespace FountainOfObjects
         }
 
         private void HandleMovement(int rowDirection, int columnDirection) {
-            int row = player.Location.Row + rowDirection;
-            int column = player.Location.Col + columnDirection;
-            if (IsValidRoom(row, column)) {
-                player.UpdatePosition(row, column);
+            int movementRow = player.Location.Row + rowDirection;
+            int movementCol = player.Location.Col + columnDirection;
+
+            if (IsValidRoom(movementRow, movementCol)) {
+                player.UpdatePosition(movementRow, movementCol);
             }
             else {
                 Utils.PrintColoredText("You've hit the wall", ConsoleColor.DarkYellow);

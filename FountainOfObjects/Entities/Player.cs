@@ -11,8 +11,8 @@
         }
 
         public void UpdatePosition(int row, int col) { 
-            location.Row += row;
-            location.Col += col;
+            location.Row = row;
+            location.Col = col;
         }
 
         public void SetDead() {
