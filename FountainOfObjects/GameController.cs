@@ -1,6 +1,7 @@
 ﻿using FountainOfObjects.Entities;
 using FountainOfObjects.Utilities;
 using FountainOfObjects.Settings;
+using FountainOfObjects.Enums;
 
 namespace FountainOfObjects
 {
@@ -16,7 +17,7 @@ namespace FountainOfObjects
                 Utils.PrintColoredText(player.ToString(), ColorSettings.MenuColor);
                 GetSurroundings();
                 string choice = Utils.GetInput("What do you want to do? ", ColorSettings.ChoiceColor).ToLower();
-                if (ChoiceToAction.TryGetValue(choice, out Action action)) {
+                if (ChoiceToAction.TryGetValue(choice, out PlayerAction action)) {
                     SelectAction(action);
                     Console.WriteLine();
                 }
@@ -28,22 +29,22 @@ namespace FountainOfObjects
         }
 
         public GameController(Difficulty diff) {
-            gameLevel = new Level(diff);
+            gameLevel = new Level();
             cave = gameLevel.LevelGrid;
             player = new Player(gameLevel.StartingRow, gameLevel.StartingCol);
         }
 
 
-        public void SelectAction(Action action) {
+        public void SelectAction(PlayerAction action) {
             if (MovementByActions.TryGetValue(action, out var movement)) {
                 HandleMovement(movement.row, movement.column);
                 Utils.PrintColoredText(EnteringRoomText[GetRoomType(player.Location.Row, player.Location.Col)], ColorSettings.SenseColor);
                 CheckPlayerStatus();
             }
-            else if (action == Action.EnableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
+            else if (action == PlayerAction.EnableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = true;
             }
-            else if(action == Action.DisableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
+            else if(action == PlayerAction.DisableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = false;
             }
         }
@@ -81,9 +82,13 @@ namespace FountainOfObjects
         }
 
         private void CheckForDeath() {
-            if(GetRoomType(player.Location.Row, player.Location.Col) == RoomType.Pit) {
+            RoomType playerRoom = GetRoomType(player.Location.Row, player.Location.Col);
+
+            if ( playerRoom == RoomType.Pit || playerRoom == RoomType.Amarok) {
                 player.IsAlive = false;
             }
+
+            //add cause of death pls
         }
 
         private void HandleMovement(int rowDirection, int columnDirection) {
@@ -121,30 +126,21 @@ namespace FountainOfObjects
             {RoomType.FountainRoom, "You hear water dripping in this room, The Fountain of Objects is here!" }
         };
 
-        private Dictionary<Action, (int row, int column)> MovementByActions = new Dictionary<Action, (int row, int column)>() {
-            { Action.MoveUp, (-1, 0) },
-            { Action.MoveDown, (1, 0) },
-            { Action.MoveLeft, (0, -1) },
-            { Action.MoveRight, (0, 1) },
+        private Dictionary<PlayerAction, (int row, int column)> MovementByActions = new Dictionary<PlayerAction, (int row, int column)>() {
+            { PlayerAction.MoveUp, (-1, 0) },
+            { PlayerAction.MoveDown, (1, 0) },
+            { PlayerAction.MoveLeft, (0, -1) },
+            { PlayerAction.MoveRight, (0, 1) },
         };
 
-        private Dictionary<String, Action> ChoiceToAction = new Dictionary<String, Action>() {
-            {"move up", Action.MoveUp },
-            {"move down", Action.MoveDown },
-            {"move left", Action.MoveLeft },
-            {"move right", Action.MoveRight },
-            {"enable fountain", Action.EnableFountain },
-            {"disable fountain", Action.DisableFountain }
+        private Dictionary<String, PlayerAction> ChoiceToAction = new Dictionary<String, PlayerAction>() {
+            {"move up", PlayerAction.MoveUp },
+            {"move down", PlayerAction.MoveDown },
+            {"move left", PlayerAction.MoveLeft },
+            {"move right", PlayerAction.MoveRight },
+            {"enable fountain", PlayerAction.EnableFountain },
+            {"disable fountain", PlayerAction.DisableFountain }
         };
 
-    }
-
-    public enum Action {
-        MoveUp,
-        MoveDown,
-        MoveLeft,
-        MoveRight,
-        EnableFountain,
-        DisableFountain
     }
 }

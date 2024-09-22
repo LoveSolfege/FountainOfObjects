@@ -1,37 +1,47 @@
-﻿using FountainOfObjects.Settings;
+﻿using FountainOfObjects.Enums;
+using FountainOfObjects.Settings;
 using FountainOfObjects.Utilities;
+using Microsoft.Extensions.Configuration;
 
 namespace FountainOfObjects
 {
     internal class Program {
+
+        private static IConfiguration config = Settings.ConfigurationManager.Configuration;
         static void Main(string[] args) {
-            ColorSettings.LoadColors(ConfigurationManager.Configuration);
+            
+            ColorSettings.LoadColors(config);
             GameController game;
             while (true) {
                 PrintMenuAndWait(ColorSettings.MenuColor);
-                game = GameSizeSelection(ColorSettings.MenuColor);
+                game = SelectGameDifficulty(ColorSettings.MenuColor);
                 game.Run();
             }
         }
 
-        static GameController GameSizeSelection(ConsoleColor color = ConsoleColor.Gray) {
+        static GameController SelectGameDifficulty(ConsoleColor color = ConsoleColor.Gray) {
             Utils.ClearConsolePlaceHeader("In order to start the game, please select game difficulty", color);
             Utils.PrintColoredText("[1] Easy, [2] Medium, [3] Hard", color);
-            
-            while (true) {
+            Difficulty diff = Difficulty.None;
+            while (diff == Difficulty.None) {
                 string choice = Utils.GetInput("Cave size: ", ColorSettings.ChoiceColor);
                 switch (choice) {
                     case "1":
-                        return new GameController(Difficulty.Easy);
+                        diff = Difficulty.Easy;
+                        break;
                     case "2":
-                        return new GameController(Difficulty.Medium);
+                        diff = Difficulty.Medium;
+                        break;
                     case "3":
-                        return new GameController(Difficulty.Hard);
+                        diff = Difficulty.Hard;
+                        break;
                     default:
                         Utils.PrintColoredText("please select something between 1-2-3", ColorSettings.WarningColor);
                         continue;
                 }
             }
+            DifficultySettings.LoadDifficultySettings(config, diff);
+            return new GameController(diff);
         }
 
         static void PrintMenuAndWait(ConsoleColor color = ConsoleColor.Gray) {
