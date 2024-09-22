@@ -7,19 +7,19 @@ namespace FountainOfObjects
 {
     internal class GameController {
         private bool FountainEnabled { get; set; } = false;
+        private string _causeOfDeath;
         private Level gameLevel;
         private Player player;
         private RoomType[,] cave;
 
         public void Run() {
             Console.Clear();
+            PrintCurrentLocationInfo();
             while (player.IsAlive && !player.Won) {
-                Utils.PrintColoredText(player.ToString(), ColorSettings.MenuColor);
-                GetSurroundings();
                 string choice = Utils.GetInput("What do you want to do? ", ColorSettings.ChoiceColor).ToLower();
                 if (ChoiceToAction.TryGetValue(choice, out PlayerAction action)) {
                     SelectAction(action);
-                    Console.WriteLine();
+                    PrintCurrentLocationInfo();
                 }
                 else {
                     Utils.PrintColoredText("Choice is unsuppported, command help to get help", ColorSettings.WarningColor);
@@ -34,7 +34,6 @@ namespace FountainOfObjects
             player = new Player(gameLevel.StartingRow, gameLevel.StartingCol);
         }
 
-
         public void SelectAction(PlayerAction action) {
             if (MovementByActions.TryGetValue(action, out var movement)) {
                 HandleMovement(movement.row, movement.column);
@@ -43,24 +42,30 @@ namespace FountainOfObjects
             }
             else if (action == PlayerAction.EnableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = true;
+                Utils.PrintColoredText("Fountain of Object was activated", ConsoleColor.DarkCyan);
             }
             else if(action == PlayerAction.DisableFountain && GetRoomType(player.Location.Row, player.Location.Col) == RoomType.FountainRoom) {
                 FountainEnabled = false;
+                Utils.PrintColoredText("Fountain of Object was deactivated", ConsoleColor.Blue);
             }
         }
 
-        public void PrintResult() {
+        private void PrintResult() {
             if (player.Won)
             {
                 Utils.ClearConsolePlaceHeader("Congratulations! You Win!", ConsoleColor.Green);
             }
             else {
-                Utils.ClearConsolePlaceHeader("Game Over! you died.", ConsoleColor.Red);
+                Utils.ClearConsolePlaceHeader(_causeOfDeath, ConsoleColor.Red);
             }
             Console.ReadKey();
         }
 
-        public void GetSurroundings() {
+        private void PrintCurrentLocationInfo() {
+            //prints player location at row/col
+            Utils.PrintColoredText(player.ToString(), ColorSettings.MenuColor);
+
+            //prints surrounings if any present
             foreach (var (key, (row, col)) in MovementByActions) {
                 int newRow = player.Location.Row + row;
                 int newCol = player.Location.Col + col;
@@ -84,11 +89,13 @@ namespace FountainOfObjects
         private void CheckForDeath() {
             RoomType playerRoom = GetRoomType(player.Location.Row, player.Location.Col);
 
-            if ( playerRoom == RoomType.Pit || playerRoom == RoomType.Amarok) {
+            if ( playerRoom == RoomType.Pit) {
+                _causeOfDeath = "You fell into the pit and died.";
                 player.IsAlive = false;
             }
-
-            //add cause of death pls
+            if (playerRoom == RoomType.Amarok) {
+                _causeOfDeath = "You were eaten by Amarok.";
+            }
         }
 
         private void HandleMovement(int rowDirection, int columnDirection) {
@@ -116,14 +123,16 @@ namespace FountainOfObjects
             {RoomType.Entrance, String.Empty},
             {RoomType.Empty, String.Empty},
             {RoomType.Pit, "You feel a draft. There is a pit in a nearby room." },
-            {RoomType.FountainRoom, "You hear water dripping nearby, The Fountain of Objects is close!" }
+            {RoomType.FountainRoom, "You hear water dripping nearby, The Fountain of Objects is close!" },
+            {RoomType.Amarok, "You can smell the rotten stench of an amarok in a nearby room." }
         };
 
         private Dictionary<RoomType, String> EnteringRoomText = new Dictionary<RoomType, String>() {
             {RoomType.Entrance, "You see light coming from the cavern entrance"},
             {RoomType.Empty, String.Empty},
-            {RoomType.Pit, "You fell into a pit and died" },
-            {RoomType.FountainRoom, "You hear water dripping in this room, The Fountain of Objects is here!" }
+            {RoomType.Pit, String.Empty },
+            {RoomType.FountainRoom, "You hear water dripping in this room, The Fountain of Objects is here!" },
+            {RoomType.Amarok, String.Empty}
         };
 
         private Dictionary<PlayerAction, (int row, int column)> MovementByActions = new Dictionary<PlayerAction, (int row, int column)>() {
