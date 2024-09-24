@@ -15,7 +15,7 @@ namespace HiddenFountain.Controllers {
         private static Player player;
         private readonly Level gameLevel;
 
-        private GameController(Difficulty diff) {
+        private GameController() {
             gameLevel = new Level();
             player = new Player(gameLevel.StartingLocation.Row, gameLevel.StartingLocation.Col);
         }
@@ -39,7 +39,7 @@ namespace HiddenFountain.Controllers {
                 }
             }
             DifficultySettings.LoadDifficultySettings(config, diff);
-            return new GameController(diff);
+            return new GameController();
         }
 
         public void Run()
@@ -70,7 +70,9 @@ namespace HiddenFountain.Controllers {
                 Utils.PrintColoredText(EnteringRoomText[GetRoomType(player.PositionRow, player.PositionCol)], ColorSettings.SenseColor);
                 CheckPlayerStatus();
             }
-            else if (action == PlayerAction.EnableFountain || action == PlayerAction.DisableFountain && GetRoomType(player.PositionRow, player.PositionCol) is FountainRoom)
+            else if (action == PlayerAction.EnableFountain 
+                || action == PlayerAction.DisableFountain 
+                && gameLevel.GetRoomType(player.PositionRow, player.PositionCol) is FountainRoom)
             {
                 gameLevel.fountain.Toggle();
             }
