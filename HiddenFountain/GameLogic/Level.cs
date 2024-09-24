@@ -8,9 +8,10 @@ namespace HiddenFountain.GameLogic {
         private static readonly Random random = new();
         private int _startingRow = 0;
         private int _startingCol = 0;
-        private int WorldSize => DifficultySettings.WorldSize;
-        private int PitCount => DifficultySettings.PitCount;
+        public readonly FountainRoom fountain;
+        private static int WorldSize => DifficultySettings.WorldSize;
         public Room[,] LevelGrid { get; private set; }
+        
         public (int Row, int Col) StartingLocation {
             get => (_startingRow, _startingCol); 
             private set {
@@ -22,6 +23,7 @@ namespace HiddenFountain.GameLogic {
         public Level()
         {
             LevelGrid = new Room[WorldSize, WorldSize];
+            fountain = new FountainRoom();
             FillGrid();
         }
 
@@ -30,7 +32,6 @@ namespace HiddenFountain.GameLogic {
             //fill grid with  rooms
             Room empty = new EmptyRoom();
             Room entrance = new EntranceRoom();
-            Room fountain = new FountainRoom();
             Room pit = new PitRoom();
 
             FillGrid(empty);
@@ -38,10 +39,18 @@ namespace HiddenFountain.GameLogic {
             RandomlyPlaceRoom(fountain);
 
             // Place Pits
-            for (int i = 0; i < PitCount; i++)
+            for (int i = 0; i < DifficultySettings.PitCount; i++)
             {
                 RandomlyPlaceRoom(pit);
             }
+        }
+
+        public bool IsValidRoom(int row, int column) {
+            return row < WorldSize && row >= 0 && column < WorldSize && column >= 0;
+        }
+
+        public Room GetRoomType(int row, int column) {
+            return LevelGrid[row, column];
         }
 
         private (int row, int col) RandomlyPlaceRoom(Room room)

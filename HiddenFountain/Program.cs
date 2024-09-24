@@ -8,6 +8,7 @@ namespace HiddenFountain {
     internal class Program {
 
         private static readonly IConfiguration config = Settings.ConfigurationManager.Configuration;
+
         static void Main(string[] args) {
             ColorSettings.LoadColors(config);
             GameController game;

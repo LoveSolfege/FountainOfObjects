@@ -2,11 +2,15 @@
 
 namespace HiddenFountain.Constants {
     internal static class GameStrings {
-        //for main program
+        //text for game start 
         public static readonly string AskToSelectDifficulty = "In order to start the game, please select game difficulty";
         public static readonly string ListDifficultyOptions = "[1] Easy, [2] Medium, [3] Hard";
         public static readonly string AskForOption = "Option: ";
         public static readonly string InvalidSelection = "please select something between 1-2-3";
+
+        //text for ingame choices
+        public static readonly string WhatToDo = "What to do now? ";
+        public static readonly string BadChoice = "You don't seem to be able to do that";
 
         //Fountain activation/deactivation
         public static readonly string FountainEnabled = "The Hidden Fountain was activated";
@@ -21,6 +25,16 @@ namespace HiddenFountain.Constants {
         //text for entering something
         public static readonly string EnteringFountain = "You hear water dripping in this room, The Hidden Fountain is here!";
         public static readonly string EnteringEntrance = "You see light coming from the cavern entrance";
+
+        //causes of death
+        public static readonly string DiedInPit = "You fell into the pit and died.";
+        public static readonly string KilledByAmarok = "You were eaten by an Amarok";
+
+        //player win
+        public static readonly string Win = "Congratulations! You Won!";
+
+        //player hit wall
+        public static readonly string HitWall = "You hit the wall";
 
         //starting menu text
         public static readonly string WholeMenu = new StringBuilder()
