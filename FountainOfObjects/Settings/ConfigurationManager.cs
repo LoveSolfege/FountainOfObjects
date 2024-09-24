@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace FountainOfObjects.Settings {
+namespace HiddenFountain.Settings {
     internal static class ConfigurationManager {
         public static IConfiguration Configuration { get; private set; }
 

@@ -1,7 +1,7 @@
-﻿using FountainOfObjects.Enums;
+﻿using HiddenFountain.Enums;
 using Microsoft.Extensions.Configuration;
 
-namespace FountainOfObjects.Settings
+namespace HiddenFountain.Settings
 {
     internal static class DifficultySettings {
 

@@ -1,4 +1,4 @@
-﻿namespace FountainOfObjects.Enums
+﻿namespace HiddenFountain.Enums
 {
     public enum Difficulty
     {

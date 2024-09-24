@@ -1,4 +1,4 @@
-﻿namespace FountainOfObjects.Utilities
+﻿namespace HiddenFountain.Utilities
 {
     internal static class Utils
     {

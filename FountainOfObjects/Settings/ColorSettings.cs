@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 
 
-namespace FountainOfObjects.Settings {
+namespace HiddenFountain.Settings {
     internal static class ColorSettings {
         public static ConsoleColor MenuColor { get; private set; }
         public static ConsoleColor ChoiceColor { get; private set; }
