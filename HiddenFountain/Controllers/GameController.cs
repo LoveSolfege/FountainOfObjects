@@ -1,4 +1,5 @@
-﻿using HiddenFountain.Constants;
+﻿using HiddenFountain.Commands;
+using HiddenFountain.Constants;
 using HiddenFountain.Entities;
 using HiddenFountain.Entities.Rooms;
 using HiddenFountain.Enums;
@@ -45,55 +46,16 @@ namespace HiddenFountain.Controllers {
         public void Run()
         {
             Console.Clear();
-            PrintCurrentLocationInfo();
+            PrintCurrentInfo();
             while (player.IsAlive && !player.Won)
             {
                 string choice = Utils.GetInput(GameStrings.WhatToDo, ColorSettings.ChoiceColor).ToLower();
-                if (ChoiceToAction.TryGetValue(choice, out PlayerAction action))
-                {
-                    SelectAction(action);
-                    PrintCurrentLocationInfo();
-                }
-                else
-                {
-                    Utils.PrintColoredText(GameStrings.BadChoice, ColorSettings.WarningColor);
-                }
+                PlayerAction action = CommandManager.ExecuteCommand(choice);
+                ProcessAction(action);
             }
             PrintResult();
         }
 
-        public void SelectAction(PlayerAction action)
-        {
-            if (MovementByAction.TryGetValue(action, out var movement))
-            {
-                HandleMovement(movement.row, movement.column);
-                Utils.PrintColoredText(EnteringRoomText[GetRoomType(player.PositionRow, player.PositionCol)], ColorSettings.SenseColor);
-                CheckPlayerStatus();
-            }
-            else if (action == PlayerAction.EnableFountain 
-                || action == PlayerAction.DisableFountain 
-                && gameLevel.GetRoomType(player.PositionRow, player.PositionCol) is FountainRoom)
-            {
-                gameLevel.fountain.Toggle();
-            }
-        }
-
-        private void PrintCurrentLocationInfo()
-        {
-            //prints player location at row/col
-            Utils.PrintColoredText(player.GetLocation(), ColorSettings.MenuColor);
-
-            //prints surrounings if any present
-            foreach (var (key, (row, col)) in MovementByAction)
-            {
-                int newRow = player.PositionRow + row;
-                int newCol = player.PositionCol + col;
-                if (gameLevel.IsValidRoom(newRow, newCol))
-                {
-                    Utils.PrintColoredText(SensingRoomText[GetRoomType(newRow, newCol)], ColorSettings.SenseColor);
-                }
-            }
-        }
 
         private void CheckForDeath()
         {
@@ -105,18 +67,49 @@ namespace HiddenFountain.Controllers {
             }
         }
 
-        private Dictionary<string, PlayerAction> ChoiceToAction = new Dictionary<string, PlayerAction>() {
-            {"move up", PlayerAction.MoveUp },
-            {"move down", PlayerAction.MoveDown },
-            {"move left", PlayerAction.MoveLeft },
-            {"move right", PlayerAction.MoveRight },
-            {"enable fountain", PlayerAction.EnableFountain },
-            {"disable fountain", PlayerAction.DisableFountain }
-        };
 
 
+        /*
+        private void PrintCurrentLocationInfo() {
+            //prints player location at row/col
 
 
+            //prints surrounings if any present
+            foreach (var (key, (row, col)) in MovementByAction) {
+                int newRow = player.PositionRow + row;
+                int newCol = player.PositionCol + col;
+                if (gameLevel.IsValidRoom(newRow, newCol)) {
+                    Utils.PrintColoredText(SensingRoomText[GetRoomType(newRow, newCol)], ColorSettings.SenseColor);
+                }
+            }
+        }
+
+
+        private void SenseSurround() {
+        /   throw new NotImplementedException();
+        }
+        */
+
+        private void PrintCurrentInfo() {
+            Utils.PrintColoredText(player.GetLocation(), ColorSettings.MenuColor);
+            //SenseSurround();
+        }
+
+        private void ProcessAction(PlayerAction action) {
+            if (MovementByAction.TryGetValue(action, out var movement)) {
+                HandleMovement(movement.row, movement.column);
+                PrintCurrentInfo();
+                CheckPlayerStatus();
+            }
+            else if (action == PlayerAction.EnableFountain
+                || action == PlayerAction.DisableFountain
+                && gameLevel.GetRoomType(player.PositionRow, player.PositionCol) is FountainRoom) {
+                gameLevel.fountain.Toggle();
+            }
+            else {
+                Utils.PrintColoredText(GameStrings.BadChoice, ColorSettings.WarningColor);
+            }
+        }
 
         private static readonly Dictionary<PlayerAction, (int row, int column)> MovementByAction = new() {
             { PlayerAction.MoveUp, (-1, 0) },

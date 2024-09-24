@@ -1,6 +1,7 @@
 ﻿using HiddenFountain.Constants;
 using HiddenFountain.Interfaces;
 using HiddenFountain.Models;
+using HiddenFountain.Settings;
 using HiddenFountain.Utilities;
 
 namespace HiddenFountain.Entities.Rooms {
@@ -18,12 +19,12 @@ namespace HiddenFountain.Entities.Rooms {
                 Enabled ? ConsoleColor.DarkCyan : ConsoleColor.Blue);
         }
 
-        public string Sense() {
-            return GameStrings.FountainSense;
+        public void Sense() {
+            Utils.PrintColoredText(GameStrings.FountainSense, ColorSettings.SenseColor);
         }
 
-        public string EnteringText() {
-            return GameStrings.EnteringFountain;
+        public void EnteringText() {
+            Utils.PrintColoredText(GameStrings.EnteringFountain, ColorSettings.EnteringColor);
         }
     }
 }
