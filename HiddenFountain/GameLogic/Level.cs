@@ -29,47 +29,47 @@ namespace HiddenFountain.GameLogic {
 
         private void FillGrid()
         {
-            //fill grid with  rooms
-            Room empty = new EmptyRoom();
-            Room entrance = new EntranceRoom();
-            Room pit = new PitRoom();
-
-            FillGrid(empty);
-            StartingLocation = RandomlyPlaceRoom(entrance);
-            RandomlyPlaceRoom(fountain);
-
+            //fill cave with empty rooms
+            FillWholeGrid<EmptyRoom>();
+            //place entrance and fountain
+            StartingLocation = RandomlyPlaceRoom<EntranceRoom>();
+            _ = RandomlyPlaceRoom<FountainRoom>();
             // Place Pits
             for (int i = 0; i < DifficultySettings.PitCount; i++)
             {
-                RandomlyPlaceRoom(pit);
+                _ = RandomlyPlaceRoom<PitRoom>();
             }
         }
 
         public bool IsValidRoom(int row, int column) {
-            return row < WorldSize && row >= 0 && column < WorldSize && column >= 0;
+            return row < WorldSize 
+                && row >= 0
+                && column < WorldSize
+                && column >= 0;
         }
 
         public Room GetRoomType(int row, int column) {
             return LevelGrid[row, column];
         }
 
-        private (int row, int col) RandomlyPlaceRoom(Room room)
-        {
+        private (int row, int col) RandomlyPlaceRoom<T>() where T : Room, new(){
+
             int row, col;
             do
             {
                 row = random.Next(WorldSize);
                 col = random.Next(WorldSize);
-            } while (LevelGrid[row, col] is EmptyRoom);
 
-            LevelGrid[row, col] = room;
+            } while (LevelGrid[row, col] is not EmptyRoom);
+
+            LevelGrid[row, col] = new T();
             return (row, col);
         }
 
-        private void FillGrid(Room room) {
+        private void FillWholeGrid<T>() where T : Room, new() {
             for (int i = 0; i < WorldSize; i++) {
                 for (int j = 0; j < WorldSize; j++) {
-                    LevelGrid[i, j] = room;
+                        LevelGrid[i, j] = new T();
                 }
             }
         }

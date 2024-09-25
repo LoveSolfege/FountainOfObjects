@@ -9,7 +9,7 @@ namespace HiddenFountain.Commands {
             // Find the command based on the aliases
             foreach (var command in CommandStorage.Commands) {
                 if (command.Value.Aliases.Any(alias => alias.Equals(normalizedInput, StringComparison.OrdinalIgnoreCase))) {
-                    GetCommand(command.Key);
+                    return GetCommand(command.Key);
                 }
             }
 

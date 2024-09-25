@@ -6,11 +6,11 @@ namespace HiddenFountain.Constants {
         public static readonly string AskToSelectDifficulty = "In order to start the game, please select game difficulty";
         public static readonly string ListDifficultyOptions = "[1] Easy, [2] Medium, [3] Hard";
         public static readonly string AskForOption = "Option: ";
-        public static readonly string InvalidSelection = "please select something between 1-2-3";
+        public static readonly string InvalidDifficultySelection = "please select something between 1-2-3";
 
         //text for ingame choices
-        public static readonly string WhatToDo = "What to do now? ";
-        public static readonly string BadChoice = "You don't seem to be able to do that";
+        public static readonly string AskWhatToDo = "What to do now? ";
+        public static readonly string BadMoveChoice = "You don't seem to be able to do that";
 
         //Fountain activation/deactivation
         public static readonly string FountainEnabled = "The Hidden Fountain was activated";

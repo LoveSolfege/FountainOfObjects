@@ -36,7 +36,7 @@ namespace HiddenFountain.Controllers {
                     _ => Difficulty.None
                 };
                 if(diff == Difficulty.None) {
-                    Utils.PrintColoredText(GameStrings.InvalidSelection, ColorSettings.WarningColor);
+                    Utils.PrintColoredText(GameStrings.InvalidDifficultySelection, ColorSettings.WarningColor);
                 }
             }
             DifficultySettings.LoadDifficultySettings(config, diff);
@@ -49,7 +49,7 @@ namespace HiddenFountain.Controllers {
             PrintCurrentInfo();
             while (player.IsAlive && !player.Won)
             {
-                string choice = Utils.GetInput(GameStrings.WhatToDo, ColorSettings.ChoiceColor).ToLower();
+                string choice = Utils.GetInput(GameStrings.AskWhatToDo, ColorSettings.ChoiceColor).ToLower();
                 PlayerAction action = CommandManager.ExecuteCommand(choice);
                 ProcessAction(action);
             }
@@ -107,7 +107,7 @@ namespace HiddenFountain.Controllers {
                 gameLevel.fountain.Toggle();
             }
             else {
-                Utils.PrintColoredText(GameStrings.BadChoice, ColorSettings.WarningColor);
+                Utils.PrintColoredText(GameStrings.BadMoveChoice, ColorSettings.WarningColor);
             }
         }
 
