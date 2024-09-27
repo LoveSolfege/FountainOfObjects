@@ -11,14 +11,7 @@ namespace HiddenFountain.GameLogic {
         public readonly FountainRoom fountain;
         private static int WorldSize => DifficultySettings.WorldSize;
         public Room[,] LevelGrid { get; private set; }
-        
-        public (int Row, int Col) StartingLocation {
-            get => (_startingRow, _startingCol); 
-            private set {
-                _startingRow = value.Row;
-                _startingCol = value.Col;
-            }
-        }
+        public CavePoint StartingLocation { get; private set; }
 
         public Level()
         {
@@ -52,7 +45,7 @@ namespace HiddenFountain.GameLogic {
             return LevelGrid[row, column];
         }
 
-        private (int row, int col) RandomlyPlaceRoom<T>() where T : Room, new(){
+        private CavePoint RandomlyPlaceRoom<T>() where T : Room, new(){
 
             int row, col;
             do
@@ -63,7 +56,7 @@ namespace HiddenFountain.GameLogic {
             } while (LevelGrid[row, col] is not EmptyRoom);
 
             LevelGrid[row, col] = new T();
-            return (row, col);
+            return new CavePoint(row, col);
         }
 
         private void FillWholeGrid<T>() where T : Room, new() {
@@ -72,6 +65,10 @@ namespace HiddenFountain.GameLogic {
                         LevelGrid[i, j] = new T();
                 }
             }
+        }
+
+        private void FillNeighbors<T>() where T : Room, new() { 
+            
         }
 
     }

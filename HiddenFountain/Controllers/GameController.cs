@@ -58,7 +58,7 @@ namespace HiddenFountain.Controllers {
 
         private void CheckForDeath()
         {
-            Room playerRoom = gameLevel.GetRoomType(player.PositionRow, player.PositionCol);
+            Room playerRoom = gameLevel.GetRoomType(player.Position.Row, player.Position.Col);
 
             if (playerRoom is PitRoom) {
                 _causeOfDeath = GameStrings.DiedInPit;
@@ -102,7 +102,7 @@ namespace HiddenFountain.Controllers {
             }
             else if (action == PlayerAction.EnableFountain
                 || action == PlayerAction.DisableFountain
-                && gameLevel.GetRoomType(player.PositionRow, player.PositionCol) is FountainRoom) {
+                && gameLevel.GetRoomType(player.Position.Row, player.Position.Col) is FountainRoom) {
                 gameLevel.fountain.Toggle();
             }
             else if(action == PlayerAction.Help) {
@@ -121,8 +121,8 @@ namespace HiddenFountain.Controllers {
         };
 
         private void HandleMovement(int rowDirection, int columnDirection) {
-            int movementRow = player.PositionRow + rowDirection;
-            int movementCol = player.PositionCol + columnDirection;
+            int movementRow = player.Position.Row + rowDirection;
+            int movementCol = player.Position.Col + columnDirection;
 
             if (gameLevel.IsValidRoom(movementRow, movementCol)) {
                 player.UpdatePosition(movementRow, movementCol);

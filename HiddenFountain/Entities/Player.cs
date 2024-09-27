@@ -7,8 +7,7 @@ namespace HiddenFountain.Entities {
         public Player(int row, int col) : base(row, col) {}
 
         public void UpdatePosition(int row, int col) {
-            PositionRow = row;
-            PositionCol = col;
+            Position = new CavePoint(row, col);
         }
 
         public void MakeWin() {
@@ -16,7 +15,7 @@ namespace HiddenFountain.Entities {
         }
 
         public string GetLocation() {
-            return $"You are in the room at Row {PositionRow}, Column {PositionCol}";
+            return $"You are in the room at Row {Position.Row}, Column {Position.Col}";
         }
 
     }
