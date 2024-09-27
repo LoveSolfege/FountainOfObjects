@@ -8,8 +8,8 @@ namespace HiddenFountain.Entities.Enemies {
     internal class Amarok : Creature, ISensible{
         public Amarok(int row, int col) : base(row, col) { }
 
-        public void Sense() {
-            Utils.PrintColoredText(GameStrings.AmarokSense, ColorSettings.SenseColor);
+        public void Sense(ConsoleColor color) {
+            Utils.PrintColoredText(GameStrings.AmarokSense, color);
         }
     }
 }

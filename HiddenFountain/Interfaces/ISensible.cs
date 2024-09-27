@@ -1,5 +1,5 @@
 ﻿namespace HiddenFountain.Interfaces {
     internal interface ISensible {
-        void Sense();
+        void Sense(ConsoleColor color);
     }
 }

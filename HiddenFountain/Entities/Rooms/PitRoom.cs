@@ -6,8 +6,8 @@ using HiddenFountain.Utilities;
 
 namespace HiddenFountain.Entities.Rooms {
     internal class PitRoom : Room, ISensible{
-        public void Sense() {
-            Utils.PrintColoredText(GameStrings.PitSense, ColorSettings.SenseColor);
+        public void Sense(ConsoleColor color) {
+            Utils.PrintColoredText(GameStrings.PitSense, color);
         }
     }
 }

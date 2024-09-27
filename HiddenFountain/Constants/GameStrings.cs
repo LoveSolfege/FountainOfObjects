@@ -49,5 +49,9 @@ namespace HiddenFountain.Constants {
             .AppendLine("Press any key to begin")
             .ToString();
 
+        public static readonly string HelpText = new StringBuilder()
+            .AppendLine("help test")
+            .ToString();
+
     }
 }

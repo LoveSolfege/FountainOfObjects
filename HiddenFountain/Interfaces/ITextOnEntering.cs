@@ -3,8 +3,6 @@ using HiddenFountain.Utilities;
 
 namespace HiddenFountain.Interfaces {
     internal interface ITextOnEntering {
-        void EnteringText(string text) {
-            Utils.PrintColoredText(text, ColorSettings.EnteringColor);
-        }
+        void EnteringText(ConsoleColor color);
     }
 }

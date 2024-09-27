@@ -7,7 +7,11 @@ namespace HiddenFountain.Settings {
         public static ConsoleColor ChoiceColor { get; private set; }
         public static ConsoleColor WarningColor { get; private set; }
         public static ConsoleColor SenseColor { get; private set; }
-        public static ConsoleColor EnteringColor { get; private set; } = SenseColor;
+        public static ConsoleColor EnteringColor { get; private set; } = ConsoleColor.DarkBlue;
+        public static ConsoleColor HelpColor { get; private set; } = ConsoleColor.DarkBlue;
+        public static ConsoleColor WinColor { get; private set; } = ConsoleColor.Green;
+        public static ConsoleColor DefeatColor { get; private set; } = ConsoleColor.Red;
+
 
         public static void LoadColors(IConfiguration configuration) {
             MenuColor = ParseColor(configuration["ColorSettings:MenuColor"]);

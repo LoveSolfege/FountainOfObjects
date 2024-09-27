@@ -28,7 +28,6 @@ namespace HiddenFountain.Controllers {
             Difficulty diff = Difficulty.None;
             while (diff == Difficulty.None) {
                 string choice = Utils.GetInput(GameStrings.AskForOption, ColorSettings.ChoiceColor).ToLower();
-                //if (choice == "exit") return null;
                 diff = choice switch {
                     "1" => Difficulty.Easy,
                     "2" => Difficulty.Medium,
@@ -106,6 +105,9 @@ namespace HiddenFountain.Controllers {
                 && gameLevel.GetRoomType(player.PositionRow, player.PositionCol) is FountainRoom) {
                 gameLevel.fountain.Toggle();
             }
+            else if(action == PlayerAction.Help) {
+                Utils.PrintColoredText(GameStrings.HelpText, ColorSettings.HelpColor);
+            }
             else {
                 Utils.PrintColoredText(GameStrings.BadMoveChoice, ColorSettings.WarningColor);
             }
@@ -126,12 +128,14 @@ namespace HiddenFountain.Controllers {
                 player.UpdatePosition(movementRow, movementCol);
             }
             else {
-                Utils.PrintColoredText(GameStrings.HitWall, ConsoleColor.DarkYellow);
+                Utils.PrintColoredText(GameStrings.HitWall, ColorSettings.WarningColor);
             }
         }
 
         private void CheckForWin() {
-            if (player.IsAlive && player.Position == gameLevel.StartingLocation && gameLevel.fountain.Enabled) {
+            if (player.IsAlive
+                && player.Position == gameLevel.StartingLocation 
+                && gameLevel.fountain.Enabled) {
                 player.MakeWin();
             }
         }
@@ -142,10 +146,10 @@ namespace HiddenFountain.Controllers {
 
         private void PrintResult() {
             if (player.Won) {
-                Utils.ClearConsolePlaceHeader(GameStrings.Win, ConsoleColor.Green);
+                Utils.ClearConsolePlaceHeader(GameStrings.Win, ColorSettings.WinColor);
             }
             else {
-                Utils.ClearConsolePlaceHeader(_causeOfDeath, ConsoleColor.Red);
+                Utils.ClearConsolePlaceHeader(_causeOfDeath, ColorSettings.DefeatColor);
             }
             Console.ReadKey();
         }

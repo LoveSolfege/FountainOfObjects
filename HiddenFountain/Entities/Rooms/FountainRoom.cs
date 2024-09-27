@@ -19,12 +19,12 @@ namespace HiddenFountain.Entities.Rooms {
                 Enabled ? ConsoleColor.DarkCyan : ConsoleColor.Blue);
         }
 
-        public void Sense() {
-            Utils.PrintColoredText(GameStrings.FountainSense, ColorSettings.SenseColor);
+        public void Sense(ConsoleColor color) {
+            Utils.PrintColoredText(GameStrings.FountainSense, color);
         }
 
-        public void EnteringText() {
-            Utils.PrintColoredText(GameStrings.EnteringFountain, ColorSettings.EnteringColor);
+        public void EnteringText(ConsoleColor color) {
+            Utils.PrintColoredText(GameStrings.EnteringFountain, color);
         }
     }
 }
