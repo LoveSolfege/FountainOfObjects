@@ -3,11 +3,9 @@
 namespace HiddenFountain.GameLogic {
     internal static class GridManagar {
 
-        public static List<CavePoint> GetNeighbors(int[,] grid, int itemRow, int itemCol, int radius) {
+        public static List<Point> GetNeighbors(int[,] grid, Point location, int radius) {
 
-            List<CavePoint> neighbors = new();
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
+            List<Point> neighbors = new();
 
             // Loop through the square of size (2r + 1) centered at (itemRow, itemCol)
             for (int x = -radius; x <= radius; x++) {
@@ -17,16 +15,12 @@ namespace HiddenFountain.GameLogic {
                         continue;
                     }
 
-                    // Calculate the new position
-                    int newItemRow = itemRow + x;
-                    int newItemCol = itemCol + y;
+                    int newItemRow = location.Row + x;
+                    int newItemCol = location.Col + y;
 
-                    // Check if the new position is within grid bounds
-                    if (newItemRow >= 0 
-                        && newItemRow < rows 
-                        && newItemCol >= 0 && newItemCol < cols) {
+                    if (IsValidRoom(grid,newItemRow, newItemCol )){
 
-                        CavePoint neighbor = new CavePoint(newItemRow, newItemCol);
+                        Point neighbor = new Point(newItemRow, newItemCol);
                         neighbors.Add(neighbor);
                     }
                 }
@@ -35,5 +29,19 @@ namespace HiddenFountain.GameLogic {
             return neighbors;
         }
 
+        public static bool IsValidRoom<T>(T[,] grid, int row, int col) {
+            int rows = grid.GetLength(0);
+            int cols = grid.GetLength(1);
+
+            if (row >= 0 && row < rows && col >= 0 && col < cols) {
+                return true;
+            }
+
+            return false;
+
+        }
+
     }
+
+    
 }

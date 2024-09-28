@@ -124,7 +124,7 @@ namespace HiddenFountain.Controllers {
             int movementRow = player.Position.Row + rowDirection;
             int movementCol = player.Position.Col + columnDirection;
 
-            if (gameLevel.IsValidRoom(movementRow, movementCol)) {
+            if (GridManagar.IsValidRoom(gameLevel.LevelGrid, movementRow, movementCol)) {
                 player.UpdatePosition(movementRow, movementCol);
             }
             else {

@@ -7,7 +7,7 @@ namespace HiddenFountain.Entities {
         public Player(int row, int col) : base(row, col) {}
 
         public void UpdatePosition(int row, int col) {
-            Position = new CavePoint(row, col);
+            Position = new Point(row, col);
         }
 
         public void MakeWin() {
