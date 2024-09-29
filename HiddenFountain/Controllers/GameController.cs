@@ -74,12 +74,24 @@ namespace HiddenFountain.Controllers {
 
         private void SenseSurround() {
             List<Point> surroundings = GetSurroundings();
+            //shuffle neighbors to randomize the order of sensing
+            Shuffle(surroundings);
             foreach (var point in surroundings) {
                 Room room = gameLevel.GetRoomType(point.Row, point.Col);
 
                 if (room is ISensible sensibleRoom) {
                     sensibleRoom.Sense(ColorSettings.SenseColor);
                 }
+            }
+        }
+
+        public static void Shuffle<T>(List<T> list) {
+            Random random = new();
+            int n = list.Count;
+            for (int i = n - 1; i > 0; i--) {
+                int j = random.Next(i + 1);
+
+                (list[j], list[i]) = (list[i], list[j]);
             }
         }
 
