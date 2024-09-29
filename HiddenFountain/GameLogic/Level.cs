@@ -20,16 +20,20 @@ namespace HiddenFountain.GameLogic {
 
         private void FillGrid()
         {
-            //fill cave with empty rooms
-            FillWholeGrid<EmptyRoom>();
-            //place entrance and fountain
+            
+            //place entrance and surround with empty rooms
             StartingLocation = RandomlyPlaceRoom<EntranceRoom>();
-            _ = RandomlyPlaceRoom<FountainRoom>();
+            FillNeighbors<EmptyRoom>(StartingLocation, radius: 2);
+            //place entrance and surround with empty room 
+            Point FountainRoom = RandomlyPlaceRoom<FountainRoom>();
+            FillNeighbors<EmptyRoom>(FountainRoom, radius: 1);
             // Place Pits
             for (int i = 0; i < DifficultySettings.PitCount; i++)
             {
                 _ = RandomlyPlaceRoom<PitRoom>();
             }
+            //fill rest of the cave with empty rooms
+            FillWholeGrid<EmptyRoom>();
         }
 
         public Room GetRoomType(int row, int column) {
@@ -58,8 +62,12 @@ namespace HiddenFountain.GameLogic {
             }
         }
 
-        private void FillNeighbors<T>() where T : Room, new() { 
-            
+        private void FillNeighbors<T>(Point room, int radius) where T : Room, new() {
+            List<Point> neighbors = GridManagar.GetNeighbors(LevelGrid, room, radius);
+
+            foreach (Point neighbor in neighbors) {
+                LevelGrid[neighbor.Row,neighbor.Col] = new T();
+            }
         }
 
     }

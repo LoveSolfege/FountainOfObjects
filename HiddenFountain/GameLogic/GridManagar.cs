@@ -3,7 +3,7 @@
 namespace HiddenFountain.GameLogic {
     internal static class GridManagar {
 
-        public static List<Point> GetNeighbors(int[,] grid, Point location, int radius) {
+        public static List<Point> GetNeighbors<T>(T[,] grid, Point location, int radius) {
 
             List<Point> neighbors = new();
 
