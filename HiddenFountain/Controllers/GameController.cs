@@ -46,7 +46,6 @@ namespace HiddenFountain.Controllers {
         public void Run()
         {
             Console.Clear();
-            gameLevel.PrintLevelGrid();
             PrintCurrentInfo();
             while (player.IsAlive && !player.Won)
             {
