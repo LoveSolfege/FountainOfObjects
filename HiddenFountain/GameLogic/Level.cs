@@ -1,21 +1,19 @@
 ﻿using HiddenFountain.Entities.Rooms;
 using HiddenFountain.Models;
 using HiddenFountain.Settings;
-using System.Collections.Generic;
 
 namespace HiddenFountain.GameLogic {
     internal class Level
     {
         private static readonly Random random = new();
-        public readonly FountainRoom fountain;
         private static int WorldSize => DifficultySettings.WorldSize;
         public Room[,] LevelGrid { get; private set; }
         public Point StartingLocation { get; private set; }
+        public FountainRoom Fountain { get; private set; }
 
         public Level()
         {
             LevelGrid = new Room[WorldSize, WorldSize];
-            fountain = new FountainRoom();
             FillGrid();
         }
 
@@ -27,8 +25,10 @@ namespace HiddenFountain.GameLogic {
             FillManhattanNeighbors<EmptyRoom>(StartingLocation, radius: 2);
             //place fountain surround with empty room 
             Point FountainRoom = RandomlyPlaceRoom<FountainRoom>();
+            //assign fountain
+            Fountain = (FountainRoom)LevelGrid[FountainRoom.Row, FountainRoom.Col];
             //surround with empty room by adjacent distance of 1
-            FillAdjacentNeighbors<EmptyRoom>(FountainRoom, radius: 2);
+            FillAdjacentNeighbors<EmptyRoom>(FountainRoom, radius: 1);
             // Place Pits
             for (int i = 0; i < DifficultySettings.PitCount; i++)
             {
@@ -59,7 +59,9 @@ namespace HiddenFountain.GameLogic {
         private void FillWholeGrid<T>() where T : Room, new() {
             for (int i = 0; i < WorldSize; i++) {
                 for (int j = 0; j < WorldSize; j++) {
+                    if(LevelGrid[i, j] == null) {
                         LevelGrid[i, j] = new T();
+                    }
                 }
             }
         }
@@ -77,6 +79,21 @@ namespace HiddenFountain.GameLogic {
         private void CreateRoomFromList<T>(List<Point> rooms) where T : Room, new() {
             foreach (Point room in rooms) {
                 LevelGrid[room.Row, room.Col] = new T();
+            }
+        }
+
+        public void PrintLevelGrid() {
+            for (int i = 0; i < WorldSize; i++) {
+                for (int j = 0; j < WorldSize; j++) {
+                    Room room = LevelGrid[i, j];
+                    if (room != null) {
+                        Console.Write(room.ToString() + " ");
+                    }
+                    else {
+                        Console.Write("? "); // Uninitialized room
+                    }
+                }
+                Console.WriteLine(); // New line for the next row
             }
         }
     }

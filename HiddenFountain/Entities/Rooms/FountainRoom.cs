@@ -1,7 +1,6 @@
 ﻿using HiddenFountain.Constants;
 using HiddenFountain.Interfaces;
 using HiddenFountain.Models;
-using HiddenFountain.Settings;
 using HiddenFountain.Utilities;
 
 namespace HiddenFountain.Entities.Rooms {
@@ -25,6 +24,10 @@ namespace HiddenFountain.Entities.Rooms {
 
         public void EnteringText(ConsoleColor color) {
             Utils.PrintColoredText(GameStrings.EnteringFountain, color);
+        }
+
+        public override string ToString() {
+            return "Fountain"; // Fountain
         }
     }
 }

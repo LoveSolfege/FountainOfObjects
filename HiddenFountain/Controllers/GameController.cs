@@ -4,6 +4,7 @@ using HiddenFountain.Entities;
 using HiddenFountain.Entities.Rooms;
 using HiddenFountain.Enums;
 using HiddenFountain.GameLogic;
+using HiddenFountain.Interfaces;
 using HiddenFountain.Models;
 using HiddenFountain.Settings;
 using HiddenFountain.Utilities;
@@ -45,6 +46,7 @@ namespace HiddenFountain.Controllers {
         public void Run()
         {
             Console.Clear();
+            gameLevel.PrintLevelGrid();
             PrintCurrentInfo();
             while (player.IsAlive && !player.Won)
             {
@@ -56,8 +58,7 @@ namespace HiddenFountain.Controllers {
         }
 
 
-        private void CheckForDeath()
-        {
+        private void CheckForDeath() {
             Room playerRoom = gameLevel.GetRoomType(player.Position.Row, player.Position.Col);
 
             if (playerRoom is PitRoom) {
@@ -66,32 +67,24 @@ namespace HiddenFountain.Controllers {
             }
         }
 
+        private void PrintCurrentInfo() {
+            Utils.PrintColoredText(player.GetLocation(), ColorSettings.MenuColor);
+            SenseSurround();
+        }
 
+        private void SenseSurround() {
+            List<Point> surroundings = GetSurroundings();
+            foreach (var point in surroundings) {
+                Room room = gameLevel.GetRoomType(point.Row, point.Col);
 
-        /*
-        private void PrintCurrentLocationInfo() {
-            //prints player location at row/col
-
-
-            //prints surrounings if any present
-            foreach (var (key, (row, col)) in MovementByAction) {
-                int newRow = player.PositionRow + row;
-                int newCol = player.PositionCol + col;
-                if (gameLevel.IsValidRoom(newRow, newCol)) {
-                    Utils.PrintColoredText(SensingRoomText[GetRoomType(newRow, newCol)], ColorSettings.SenseColor);
+                if (room is ISensible sensibleRoom) {
+                    sensibleRoom.Sense(ColorSettings.SenseColor);
                 }
             }
         }
 
-
-        private void SenseSurround() {
-        /   throw new NotImplementedException();
-        }
-        */
-
-        private void PrintCurrentInfo() {
-            Utils.PrintColoredText(player.GetLocation(), ColorSettings.MenuColor);
-            //SenseSurround();
+        private List<Point> GetSurroundings() {
+            return GridManagar.GetAdjacentNeighbors(gameLevel.LevelGrid, player.Position, 1);
         }
 
         private void ProcessAction(PlayerAction action) {
@@ -100,10 +93,9 @@ namespace HiddenFountain.Controllers {
                 PrintCurrentInfo();
                 CheckPlayerStatus();
             }
-            else if (action == PlayerAction.EnableFountain
-                || action == PlayerAction.DisableFountain
+            else if ((action == PlayerAction.ActivateFountain || action == PlayerAction.DeactivateFountain)
                 && gameLevel.GetRoomType(player.Position.Row, player.Position.Col) is FountainRoom) {
-                gameLevel.fountain.Toggle();
+                gameLevel.Fountain.Toggle();
             }
             else if(action == PlayerAction.Help) {
                 Utils.PrintColoredText(GameStrings.HelpText, ColorSettings.HelpColor);
@@ -135,7 +127,7 @@ namespace HiddenFountain.Controllers {
         private void CheckForWin() {
             if (player.IsAlive
                 && player.Position == gameLevel.StartingLocation 
-                && gameLevel.fountain.Enabled) {
+                && gameLevel.Fountain.Enabled) {
                 player.MakeWin();
             }
         }

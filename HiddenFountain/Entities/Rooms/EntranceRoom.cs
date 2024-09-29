@@ -9,5 +9,9 @@ namespace HiddenFountain.Entities.Rooms {
         public void EnteringText(ConsoleColor color) {
             Utils.PrintColoredText(GameStrings.EnteringEntrance, color);
         }
+
+        public override string ToString() {
+            return "Entrance";
+        }
     }
 }

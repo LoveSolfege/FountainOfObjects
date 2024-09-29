@@ -7,8 +7,8 @@
         MoveDown,
         MoveLeft,
         MoveRight,
-        EnableFountain,
-        DisableFountain,
+        ActivateFountain,
+        DeactivateFountain,
         Help
     }
 }

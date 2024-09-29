@@ -9,5 +9,10 @@ namespace HiddenFountain.Entities.Rooms {
         public void Sense(ConsoleColor color) {
             Utils.PrintColoredText(GameStrings.PitSense, color);
         }
+
+        public override string ToString() {
+            return "Pit";
+        }
+
     }
 }
