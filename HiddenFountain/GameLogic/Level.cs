@@ -1,6 +1,7 @@
 ﻿using HiddenFountain.Entities.Rooms;
 using HiddenFountain.Models;
 using HiddenFountain.Settings;
+using System.Collections.Generic;
 
 namespace HiddenFountain.GameLogic {
     internal class Level
@@ -20,12 +21,14 @@ namespace HiddenFountain.GameLogic {
 
         private void FillGrid()
         {
-            //place entrance and surround with empty rooms
+            //place entrance 
             StartingLocation = RandomlyPlaceRoom<EntranceRoom>();
-            FillNeighbors<EmptyRoom>(StartingLocation, radius: 2);
-            //place entrance and surround with empty room 
+            //surround with empty rooms by manhattan distance of 2
+            FillManhattanNeighbors<EmptyRoom>(StartingLocation, radius: 2);
+            //place fountain surround with empty room 
             Point FountainRoom = RandomlyPlaceRoom<FountainRoom>();
-            FillNeighbors<EmptyRoom>(FountainRoom, radius: 1);
+            //surround with empty room by adjacent distance of 1
+            FillAdjacentNeighbors<EmptyRoom>(FountainRoom, radius: 2);
             // Place Pits
             for (int i = 0; i < DifficultySettings.PitCount; i++)
             {
@@ -61,14 +64,21 @@ namespace HiddenFountain.GameLogic {
             }
         }
 
-        private void FillNeighbors<T>(Point room, int radius) where T : Room, new() {
-            List<Point> neighbors = GridManagar.GetNeighbors(LevelGrid, room, radius);
-
-            foreach (Point neighbor in neighbors) {
-                LevelGrid[neighbor.Row,neighbor.Col] = new T();
-            }
+        private void FillManhattanNeighbors<T>(Point room, int radius) where T : Room, new(){
+            List<Point> neighbors = GridManagar.GetManhattanNeighbors(LevelGrid, room, radius);
+            CreateRoomFromList<T>(neighbors);
         }
 
+        private void FillAdjacentNeighbors<T>(Point room, int radius) where T : Room, new() {
+            List<Point> neighbors = GridManagar.GetAdjacentNeighbors(LevelGrid, room, radius);
+            CreateRoomFromList<T>(neighbors);
+        }
+
+        private void CreateRoomFromList<T>(List<Point> rooms) where T : Room, new() {
+            foreach (Point room in rooms) {
+                LevelGrid[room.Row, room.Col] = new T();
+            }
+        }
     }
 
 }
