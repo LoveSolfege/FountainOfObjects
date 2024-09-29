@@ -20,7 +20,6 @@ namespace HiddenFountain.GameLogic {
 
         private void FillGrid()
         {
-            
             //place entrance and surround with empty rooms
             StartingLocation = RandomlyPlaceRoom<EntranceRoom>();
             FillNeighbors<EmptyRoom>(StartingLocation, radius: 2);
@@ -48,7 +47,7 @@ namespace HiddenFountain.GameLogic {
                 row = random.Next(WorldSize);
                 col = random.Next(WorldSize);
 
-            } while (LevelGrid[row, col] is not EmptyRoom);
+            } while (LevelGrid[row, col] is not null);
 
             LevelGrid[row, col] = new T();
             return new Point(row, col);
