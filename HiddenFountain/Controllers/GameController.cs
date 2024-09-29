@@ -68,6 +68,7 @@ namespace HiddenFountain.Controllers {
 
         private void PrintCurrentInfo() {
             Utils.PrintColoredText(player.GetLocation(), ColorSettings.MenuColor);
+            EnteringSense();
             SenseSurround();
         }
 
@@ -81,6 +82,12 @@ namespace HiddenFountain.Controllers {
                 if (room is ISensible sensibleRoom) {
                     sensibleRoom.Sense(ColorSettings.SenseColor);
                 }
+            }
+        }
+
+        private void EnteringSense() {
+            if (gameLevel.GetRoomType(player.Position.Row, player.Position.Col) is ITextOnEntering enteringRoom) {
+                enteringRoom.EnteringText(ColorSettings.EnteringColor);
             }
         }
 
