@@ -3,6 +3,7 @@ using HiddenFountain.Constants;
 using HiddenFountain.Entities;
 using HiddenFountain.Entities.Rooms;
 using HiddenFountain.Enums;
+using HiddenFountain.Extensions;
 using HiddenFountain.GameLogic;
 using HiddenFountain.Interfaces;
 using HiddenFountain.Models;
@@ -75,7 +76,7 @@ namespace HiddenFountain.Controllers {
         private void SenseSurround() {
             List<Point> surroundings = GetSurroundings();
             //shuffle neighbors to randomize the order of sensing
-            Shuffle(surroundings);
+            surroundings.Shuffle();
             foreach (var point in surroundings) {
                 Room room = gameLevel.GetRoomType(point.Row, point.Col);
 
@@ -91,18 +92,8 @@ namespace HiddenFountain.Controllers {
             }
         }
 
-        public static void Shuffle<T>(List<T> list) {
-            Random random = new();
-            int n = list.Count;
-            for (int i = n - 1; i > 0; i--) {
-                int j = random.Next(i + 1);
-
-                (list[j], list[i]) = (list[i], list[j]);
-            }
-        }
-
         private List<Point> GetSurroundings() {
-            return GridManagar.GetAdjacentNeighbors(gameLevel.LevelGrid, player.Position, 1);
+            return GridManagar.GetManhattanNeighbors(gameLevel.LevelGrid, player.Position, 1);
         }
 
         private void ProcessAction(PlayerAction action) {
@@ -133,8 +124,9 @@ namespace HiddenFountain.Controllers {
         private void HandleMovement(int rowDirection, int columnDirection) {
             int movementRow = player.Position.Row + rowDirection;
             int movementCol = player.Position.Col + columnDirection;
+            int caveLength = gameLevel.LevelGrid.GetLength(0);
 
-            if (GridManagar.IsValidRoom(gameLevel.LevelGrid, movementRow, movementCol)) {
+            if (GridManagar.IsValidRoom(movementRow, movementCol, caveLength)) {
                 player.UpdatePosition(movementRow, movementCol);
             }
             else {

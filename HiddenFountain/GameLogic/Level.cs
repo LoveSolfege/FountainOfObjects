@@ -22,13 +22,13 @@ namespace HiddenFountain.GameLogic {
             //place entrance 
             StartingLocation = RandomlyPlaceRoom<EntranceRoom>();
             //surround with empty rooms by manhattan distance of 2
-            FillManhattanNeighbors<EmptyRoom>(StartingLocation, radius: 2);
+            FillNeighbors<EmptyRoom>(StartingLocation, radius: 2);
             //place fountain surround with empty room 
             Point FountainRoom = RandomlyPlaceRoom<FountainRoom>();
             //assign fountain
             Fountain = (FountainRoom)LevelGrid[FountainRoom.Row, FountainRoom.Col];
             //surround with empty room by adjacent distance of 1
-            FillAdjacentNeighbors<EmptyRoom>(FountainRoom, radius: 1);
+            FillNeighbors<EmptyRoom>(FountainRoom, radius: 1);
             // Place Pits
             for (int i = 0; i < DifficultySettings.PitCount; i++)
             {
@@ -66,13 +66,8 @@ namespace HiddenFountain.GameLogic {
             }
         }
 
-        private void FillManhattanNeighbors<T>(Point room, int radius) where T : Room, new(){
+        private void FillNeighbors<T>(Point room, int radius) where T : Room, new(){
             List<Point> neighbors = GridManagar.GetManhattanNeighbors(LevelGrid, room, radius);
-            CreateRoomFromList<T>(neighbors);
-        }
-
-        private void FillAdjacentNeighbors<T>(Point room, int radius) where T : Room, new() {
-            List<Point> neighbors = GridManagar.GetAdjacentNeighbors(LevelGrid, room, radius);
             CreateRoomFromList<T>(neighbors);
         }
 

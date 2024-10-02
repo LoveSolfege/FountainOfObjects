@@ -5,6 +5,7 @@ namespace HiddenFountain.GameLogic {
 
         public static List<Point> GetManhattanNeighbors<T>(T[,] grid, Point location, int radius) {
             List<Point> neighbors = new();
+            int rows = grid.GetLength(0);
             // Loop through the square of size (2r + 1) centered at (itemRow, itemCol)
             for (int x = -radius; x <= radius; x++) {
                 for (int y = -radius; y <= radius; y++) {
@@ -16,7 +17,7 @@ namespace HiddenFountain.GameLogic {
                     int newItemRow = location.Row + x;
                     int newItemCol = location.Col + y;
 
-                    if (IsValidRoom(grid,newItemRow, newItemCol )){
+                    if (IsValidRoom(newItemRow, newItemCol, rows)) {
 
                         Point neighbor = new Point(newItemRow, newItemCol);
                         neighbors.Add(neighbor);
@@ -27,36 +28,12 @@ namespace HiddenFountain.GameLogic {
             return neighbors;
         }
 
-        public static List<Point> GetAdjacentNeighbors<T>(T[,] grid, Point location, int distance) {
-            List<Point> neighbors = new();
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
+        public static bool IsValidRoom(int row, int col, int sizeX, int sizeY = 0) {
+            int rows = sizeX;
+            int cols = sizeY;
 
-            for (int d = 1; d <= distance; d++) {
-                // Left
-                if (location.Col - d >= 0) {
-                    neighbors.Add(new Point(location.Row, location.Col - d));
-                }
-                // Right
-                if (location.Col + d < cols) {
-                    neighbors.Add(new Point(location.Row, location.Col + d));
-                }
-                // Top
-                if (location.Row - d >= 0) {
-                    neighbors.Add(new Point(location.Row - d, location.Col));
-                }
-                // Bottom
-                if (location.Row + d < rows) {
-                    neighbors.Add(new Point(location.Row + d, location.Col));
-                }
-            }
-
-            return neighbors;
-        }
-
-        public static bool IsValidRoom<T>(T[,] grid, int row, int col) {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
+            if (sizeY == 0)
+                cols = sizeX;
 
             if (row >= 0 && row < rows && col >= 0 && col < cols) {
                 return true;
