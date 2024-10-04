@@ -49,9 +49,15 @@ namespace HiddenFountain.Constants {
             .AppendLine("Press any key to begin")
             .ToString();
 
+        //help menu text
         public static readonly string HelpText = new StringBuilder()
             .AppendLine("help test")
             .ToString();
 
+        //json load error
+        public static readonly string JsonLoadError = "Game settings file (appsettings.json) was renamed, deleted or not created yet,\nPress any key to create it.";
+
+        //json created successfully
+        public static readonly string JsonCreated = "Settings file created successfully.";
     }
 }

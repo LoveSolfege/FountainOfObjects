@@ -148,10 +148,10 @@ namespace HiddenFountain.Controllers {
 
         private void PrintResult() {
             if (player.Won) {
-                Utils.ClearConsolePlaceHeader(GameStrings.Win, ColorSettings.WinColor);
+                Utils.ClearConsolePlaceHeader(GameStrings.Win, ColorSettings.SuccessColor);
             }
             else {
-                Utils.ClearConsolePlaceHeader(_causeOfDeath, ColorSettings.DefeatColor);
+                Utils.ClearConsolePlaceHeader(_causeOfDeath, ColorSettings.FailureColor);
             }
             Console.ReadKey();
         }
