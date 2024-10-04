@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<Content Include="Resources\fountain.ico">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
