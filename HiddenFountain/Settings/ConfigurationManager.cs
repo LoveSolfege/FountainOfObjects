@@ -11,14 +11,18 @@ namespace HiddenFountain.Settings {
             try {
                 LoadConfiguration();
             }
-            catch(FileNotFoundException e) {
-                Utils.PrintColoredText(GameStrings.JsonLoadError, ColorSettings.FailureColor);
-                Console.ReadKey();
-                CreateJsonIfNotFound();
-                Console.ReadKey();
-                LoadConfiguration();
+            catch(FileNotFoundException) {
+                PrintJsonErrorAndCreateNew(GameStrings.JsonLoadError);
+            }
+            catch(JsonException) {
+                PrintJsonErrorAndCreateNew(GameStrings.JsonLoadError);
+            }
+            catch (InvalidDataException) {
+                PrintJsonErrorAndCreateNew(GameStrings.JsonLoadError);
             }
         }
+
+
 
         private static void LoadConfiguration() {
             var builder = new ConfigurationBuilder()
@@ -36,6 +40,14 @@ namespace HiddenFountain.Settings {
 
             Utils.PrintColoredText(GameStrings.JsonCreated, ColorSettings.SuccessColor);
 
+        }
+
+        private static void PrintJsonErrorAndCreateNew(string message) {
+            Utils.PrintColoredText(message, ColorSettings.FailureColor);
+            Console.ReadKey();
+            CreateJsonIfNotFound();
+            Console.ReadKey();
+            LoadConfiguration();
         }
 
     }

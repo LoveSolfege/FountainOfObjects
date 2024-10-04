@@ -65,5 +65,8 @@ namespace HiddenFountain.Constants {
 
         //please edit or delete settings file
         public static readonly string JsonEditOrDelete = "Please edit the settings file (appsettings.json) and restart the game.";
+
+        //json contains invalid colors
+        public static readonly string JsonBadColors = "Game settings file (appsettings.json) contains invalid color names\nDefault values will be used";
     }
 }

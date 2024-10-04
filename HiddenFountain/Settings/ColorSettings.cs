@@ -1,16 +1,17 @@
-﻿using HiddenFountain.Exceptions;
+﻿using HiddenFountain.Constants;
+using HiddenFountain.Exceptions;
 using HiddenFountain.Utilities;
 using Microsoft.Extensions.Configuration;
 
 
 namespace HiddenFountain.Settings {
     internal static class ColorSettings {
-        public static ConsoleColor MenuColor { get; private set; } = ConsoleColor.Gray;
-        public static ConsoleColor ChoiceColor { get; private set; } = ConsoleColor.Gray;
-        public static ConsoleColor WarningColor { get; private set; } = ConsoleColor.Gray;
-        public static ConsoleColor SenseColor { get; private set; } = ConsoleColor.Gray;
-        public static ConsoleColor EnteringColor { get; private set; } = ConsoleColor.Gray;
-        public static ConsoleColor HelpColor { get; private set; } = ConsoleColor.Gray;
+        public static ConsoleColor MenuColor { get; private set; } = ConsoleColor.DarkYellow;
+        public static ConsoleColor ChoiceColor { get; private set; } = ConsoleColor.DarkCyan;
+        public static ConsoleColor WarningColor { get; private set; } = ConsoleColor.DarkRed;
+        public static ConsoleColor SenseColor { get; private set; } = ConsoleColor.DarkGreen;
+        public static ConsoleColor EnteringColor { get; private set; } = ConsoleColor.DarkMagenta;
+        public static ConsoleColor HelpColor { get; private set; } = ConsoleColor.Blue;
         public static ConsoleColor SuccessColor { get; private set; } = ConsoleColor.Green;
         public static ConsoleColor FailureColor { get; private set; } = ConsoleColor.Red;
 
@@ -38,7 +39,7 @@ namespace HiddenFountain.Settings {
                 return consoleColor;
             }
             else {
-                throw new SettingsSectionCorruptedException($"Game settings file contains invalid color name: '{colorName}'\nDefault valie will be used");
+                throw new SettingsSectionCorruptedException(GameStrings.JsonBadColors);
             }
         }
     }
