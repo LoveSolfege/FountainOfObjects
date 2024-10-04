@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using HiddenFountain.Exceptions;
+using HiddenFountain.Utilities;
+using Microsoft.Extensions.Configuration;
 
 
 namespace HiddenFountain.Settings {
@@ -13,20 +15,31 @@ namespace HiddenFountain.Settings {
         public static ConsoleColor FailureColor { get; private set; } = ConsoleColor.Red;
 
         public static void LoadColors(IConfiguration configuration) {
-            MenuColor = ParseColor(configuration["ColorSettings:MenuColor"]);
-            ChoiceColor = ParseColor(configuration["ColorSettingss:ChoiceColor"]);
-            WarningColor = ParseColor(configuration["ColorSettings:WarningColor"]);
-            SenseColor = ParseColor(configuration["ColorSettings:SenseColor"]);
-            EnteringColor = ParseColor(configuration["ColorSettings:EnteringColor"]);
-            HelpColor = ParseColor(configuration["ColorSettings:HelpColor"]);
-            SuccessColor = ParseColor(configuration["ColorSettings:SuccessColor"]);
-            FailureColor = ParseColor(configuration["ColorSettings:FailureColor"]);
+            try {
+                MenuColor = ParseColor(configuration["ColorSettings:MenuColor"]);
+                ChoiceColor = ParseColor(configuration["ColorSettings:ChoiceColor"]);
+                WarningColor = ParseColor(configuration["ColorSettings:WarningColor"]);
+                SenseColor = ParseColor(configuration["ColorSettings:SenseColor"]);
+                EnteringColor = ParseColor(configuration["ColorSettings:EnteringColor"]);
+                HelpColor = ParseColor(configuration["ColorSettings:HelpColor"]);
+                SuccessColor = ParseColor(configuration["ColorSettings:SuccessColor"]);
+                FailureColor = ParseColor(configuration["ColorSettings:FailureColor"]);
+            }
+            catch (SettingsSectionCorruptedException e) {
+                Utils.PrintColoredText($"Error loading colors: {e.Message}", ConsoleColor.Red);
+                Console.ReadKey();
+            }
+
         }
 
         private static ConsoleColor ParseColor(string colorName) {
-            return Enum.TryParse<ConsoleColor>(colorName, true, out var consoleColor)
-                ? consoleColor
-                : ConsoleColor.Gray;
+            if (Enum.TryParse<ConsoleColor>(colorName, true, out var consoleColor)) {
+                Console.WriteLine(consoleColor);
+                return consoleColor;
+            }
+            else {
+                throw new SettingsSectionCorruptedException($"Game settings file contains invalid color name: '{colorName}'\nDefault valie will be used");
+            }
         }
     }
 }

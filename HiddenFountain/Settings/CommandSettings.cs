@@ -1,4 +1,5 @@
 ﻿using HiddenFountain.Commands;
+using HiddenFountain.Constants;
 using HiddenFountain.Exceptions;
 using HiddenFountain.Utilities;
 using Microsoft.Extensions.Configuration;
@@ -19,11 +20,24 @@ namespace HiddenFountain.Settings {
                     }
                 }
             }
-            catch(NullReferenceException e) {
-                Utils.PrintColoredText($"Error loading commands: {e.Message}", ColorSettings.FailureColor);
+            catch(NullReferenceException) {
+                Utils.PrintColoredText(GameStrings.JsonCorrupted, ColorSettings.FailureColor);
+                Console.ReadKey();
+                CommandStorage.Commands = new Dictionary<string, Command> {
+                    { "MoveUp", new Command { Aliases = ["up", "w"] } },
+                    { "MoveDown", new Command { Aliases = ["down", "s"] } },
+                    { "MoveLeft", new Command { Aliases = ["left", "a"] } },
+                    { "MoveRight", new Command { Aliases = ["right", "d"] } },
+                    { "EnableFountain", new Command { Aliases = ["enable"] } },
+                    { "DisableFountain", new Command { Aliases = ["disable"] } },
+                    { "Help", new Command { Aliases = ["help"] } }
+                };
+
             }
             catch (DuplicateAliasException e) {
-                Utils.PrintColoredText($"Error loading commands: {e.Message}", ColorSettings.FailureColor);
+                Utils.PrintColoredText($"Error loading commands: {e.Message}\n{GameStrings.JsonEditOrDelete}", ColorSettings.FailureColor);
+                Console.ReadKey(true);
+                Environment.Exit(1);
             }
         }
     }

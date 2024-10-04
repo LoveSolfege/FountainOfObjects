@@ -59,5 +59,11 @@ namespace HiddenFountain.Constants {
 
         //json created successfully
         public static readonly string JsonCreated = "Settings file created successfully.";
+
+        //json corrupted or badly edited error with
+        public static readonly string JsonCorrupted = "Game settings file (appsettings.json) is corrupted or badly edited,\nDefault values for corrupted parts will be used";
+
+        //please edit or delete settings file
+        public static readonly string JsonEditOrDelete = "Please edit the settings file (appsettings.json) and restart the game.";
     }
 }
