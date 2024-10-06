@@ -17,6 +17,8 @@ namespace HiddenFountain.Controllers {
         private string _causeOfDeath;
         private static Player player;
         private readonly Level gameLevel;
+        private static DateTime startTime;
+        private static TimeSpan timeSpent;
 
         private GameController() {
             gameLevel = new Level();
@@ -46,6 +48,7 @@ namespace HiddenFountain.Controllers {
 
         public void Run()
         {
+            startTime = DateTime.Now;
             Console.Clear();
             PrintCurrentInfo();
             while (player.IsAlive && !player.Won)
@@ -55,16 +58,6 @@ namespace HiddenFountain.Controllers {
                 ProcessAction(action);
             }
             PrintResult();
-        }
-
-
-        private void CheckForDeath() {
-            Room playerRoom = gameLevel.GetRoomType(player.Position.Row, player.Position.Col);
-
-            if (playerRoom is PitRoom) {
-                _causeOfDeath = GameStrings.DiedInPit;
-                player.Die();
-            }
         }
 
         private void PrintCurrentInfo() {
@@ -139,8 +132,20 @@ namespace HiddenFountain.Controllers {
                 && player.Position == gameLevel.StartingLocation 
                 && gameLevel.Fountain.Enabled) {
                 player.MakeWin();
+                timeSpent = startTime - DateTime.Now;
             }
         }
+
+        private void CheckForDeath() {
+            Room playerRoom = gameLevel.GetRoomType(player.Position.Row, player.Position.Col);
+
+            if (playerRoom is PitRoom) {
+                _causeOfDeath = GameStrings.DiedInPit;
+                player.Die();
+                timeSpent = DateTime.Now - startTime;
+            }
+        }
+
         private void CheckPlayerStatus() {
             CheckForDeath();
             CheckForWin();
@@ -153,6 +158,7 @@ namespace HiddenFountain.Controllers {
             else {
                 Utils.ClearConsolePlaceHeader(_causeOfDeath, ColorSettings.FailureColor);
             }
+            Utils.PrintColoredText($"Time spent in the cave: {(int)timeSpent.TotalMinutes} minutes and {timeSpent.TotalSeconds:F1} seconds", ColorSettings.MenuColor);
             Console.ReadKey();
         }
     }
